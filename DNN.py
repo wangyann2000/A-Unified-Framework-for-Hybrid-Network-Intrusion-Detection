@@ -342,32 +342,7 @@ def evaluation(y_true, score):
         ave_recall += recall
 
     ave_recall /= dataset.malicious_classes.shape[0]
-    print("Recall per class:")
-    for cls, recall in recall_per_class.items():
-        print(f"Class {dataset.traffic_names[cls]}: Recall = {recall}")
 
-    result_dir = f'./result/{opt.dataset}/DNN/discrimination/{opt.split}/'
-
-    os.makedirs(result_dir, exist_ok=True)
-
-    result_file = os.path.join(result_dir, 'result.csv')
-
-    # organize data for save
-    result_data = {
-        'AUC-ROC': [auc_roc],
-        'AUC-PR': [auc_pr],
-        'Accuracy': [accuracy],
-        'Average Recall': [ave_recall],
-    }
-
-    for cls, recall in recall_per_class.items():
-        result_data[f'{dataset.traffic_names[cls]}'] = [recall]
-
-    # save to CSV
-    df = pd.DataFrame(result_data)
-    df.to_csv(result_file, index=False)
-
-    print(f"Results saved to {result_file}")
     return y_pred, best_threshold
 
 
@@ -381,9 +356,9 @@ parser.add_argument('--split', default='1', help='Dataset split for training and
 parser.add_argument('--manualSeed', type=int, default=42, help='Random seed')
 parser.add_argument('--resSize', type=int, default=70, help='Size of visual features')
 parser.add_argument('--kmax', type=int, default=20, help='Local neighbors kmax')
-parser.add_argument('--threshold', type=float, default=0.95, help='Evaluate model performance with TPR[threshold]')
+parser.add_argument('--threshold', type=float, default=0.99, help='Evaluate model performance with TPR[threshold]')
 parser.add_argument('--factor', type=float, default=0.02, help='Scaling factor for umap visualization')
-parser.add_argument('--visualize', type=bool, default=False, help='Whether to visualize the data')
+parser.add_argument('--visualize', type=bool, default=True, help='Whether to visualize the data')
 parser.add_argument('--load_model', type=bool, default=False, help='Whether to load the model')
 
 opt = parser.parse_args()
@@ -422,18 +397,12 @@ pairwise = nn.PairwiseDistance(p=2)
 distance_matrix = torch.FloatTensor(size=(test_feature.shape[0],)).to(device)
 
 # training and inference procedure of discriminator
-if opt.load_model:
-    distance_matrix = torch.load(f"./matrix/{opt.dataset}/{opt.split}/dis_matrix.pt").to(device)
-else:
-    for i in trange(test_feature.shape[0]):
-        expand_feature = test_feature[i].unsqueeze(0).expand_as(dataset.train_seen_feature)
-        dis = pairwise(expand_feature, dataset.train_seen_feature)
-        # sort and selection
-        distances, _ = torch.topk(dis, k=K, largest=False)
-        distance_matrix[i] = distances[-1]
-    result_dir = f"./matrix/{opt.dataset}/{opt.split}"
-    os.makedirs(result_dir, exist_ok=True)
-    torch.save(distance_matrix, f"{result_dir}/dis_matrix.pt")
+for i in trange(test_feature.shape[0]):
+    expand_feature = test_feature[i].unsqueeze(0).expand_as(dataset.train_seen_feature)
+    dis = pairwise(expand_feature, dataset.train_seen_feature)
+    # sort and selection
+    distances, _ = torch.topk(dis, k=K, largest=False)
+    distance_matrix[i] = distances[-1]
 
 y_true = dataset.test_seen_unseen_label.cpu().numpy()
 
