@@ -392,9 +392,9 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--dataset', default='cicids', help='Dataset')
 parser.add_argument('--split', default='1', help='Dataset split for training and evaluation')
 parser.add_argument('--manualSeed', type=int, default=42, help='Random seed')
-parser.add_argument('--threshold', type=float, default=0.95, help='Evaluate model performance with TPR[threshold]')
+parser.add_argument('--threshold', type=float, default=0.99, help='Evaluate model performance with TPR[threshold]')
 parser.add_argument('--factor', type=float, default=0.02, help='Scaling factor for umap visualization')
-parser.add_argument('--visualize', type=bool, default=False, help='Whether to visualize the data')
+parser.add_argument('--visualize', type=bool, default=True, help='Whether to visualize the data')
 opt = parser.parse_args()
 
 # load pre-defined hyperparameters
