@@ -1,0 +1,8 @@
+{
+    "dataset": "botiot",
+    "split": "2",
+    "manualSeed": 42,
+    "threshold": 0.99,
+    "factor": 0.002,
+    "visualize": true
+}

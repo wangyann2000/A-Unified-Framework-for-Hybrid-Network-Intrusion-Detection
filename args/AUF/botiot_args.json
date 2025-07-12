@@ -1,0 +1,15 @@
+{
+    "dataset": "botiot",
+    "split": "2",
+    "manualSeed": 42,
+    "resSize": 70,
+    "embedSize": 128,
+    "outzSize": 32,
+    "kmin": 3,
+    "kmax": 40,
+    "khat": 200,
+    "customized": false,
+    "threshold": 0.99,
+    "factor": 0.002,
+    "visualize": true
+}

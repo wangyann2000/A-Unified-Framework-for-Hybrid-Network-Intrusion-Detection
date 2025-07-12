@@ -1,0 +1,15 @@
+{
+    "dataset": "cicids",
+    "split": "1",
+    "manualSeed": 42,
+    "resSize": 70,
+    "embedSize": 128,
+    "outzSize": 32,
+    "kmin": 3,
+    "kmax": 20,
+    "khat": 200,
+    "customized": false,
+    "threshold": 0.99,
+    "factor": 0.02,
+    "visualize": true
+}

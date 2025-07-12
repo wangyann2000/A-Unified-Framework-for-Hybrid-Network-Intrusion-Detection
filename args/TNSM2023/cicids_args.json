@@ -1,0 +1,8 @@
+{
+    "dataset": "cicids",
+    "split": "1",
+    "manualSeed": 42,
+    "threshold": 0.99,
+    "factor": 0.02,
+    "visualize": true
+}
